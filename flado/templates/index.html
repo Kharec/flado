@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tasks-container" data-filter="{{ filter_type }}" data-search="{{ search_query }}">
+    <div class="controls-bar">
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Search tasks..." 
+                value="{{ search_query }}"
+                class="search-input"
+            >
+            <button class="search-clear" id="search-clear" style="display: none;">×</button>
+        </div>
+        
+        <div class="filter-tabs">
+            <a href="{{ url_for('tasks.index', filter='all') }}" 
+               class="filter-tab {{ 'active' if filter_type == 'all' else '' }}">All</a>
+            <a href="{{ url_for('tasks.index', filter='today') }}" 
+               class="filter-tab {{ 'active' if filter_type == 'today' else '' }}">Today</a>
+            <a href="{{ url_for('tasks.index', filter='upcoming') }}" 
+               class="filter-tab {{ 'active' if filter_type == 'upcoming' else '' }}">Upcoming</a>
+            <a href="{{ url_for('tasks.index', filter='active') }}" 
+               class="filter-tab {{ 'active' if filter_type == 'active' else '' }}">Active</a>
+            <a href="{{ url_for('tasks.index', filter='completed') }}" 
+               class="filter-tab {{ 'active' if filter_type == 'completed' else '' }}">Completed</a>
+        </div>
+    </div>
+
+    <div class="quick-add-form">
+        <form id="task-form" class="task-form">
+            <input 
+                type="text" 
+                id="task-title-input" 
+                placeholder="Add a new task..." 
+                class="task-input"
+                required
+                autocomplete="off"
+            >
+            <button type="submit" class="add-button" title="Add task (Enter)">+</button>
+        </form>
+        <div class="task-details-expand" id="task-details-toggle" style="display: none;">
+            <button class="expand-button">
+                <span class="expand-icon">+</span>
+                Add details
+            </button>
+        </div>
+        <div class="task-details-form" id="task-details-form" style="display: none;">
+            <textarea 
+                id="task-description-input" 
+                placeholder="Description (optional)"
+                class="task-description-input"
+                rows="3"
+            ></textarea>
+            <input 
+                type="date" 
+                id="task-due-date-input" 
+                class="task-due-date-input"
+            >
+            <div class="form-actions">
+                <button type="button" class="cancel-button" id="cancel-details">Cancel</button>
+                <button type="submit" class="save-button" form="task-form">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="task-list" id="task-list">
+        {% if tasks %}
+            {% for task in tasks %}
+            <div class="task-item {{ 'completed' if task.completed else '' }}" 
+                 data-task-id="{{ task.id }}" 
+                 draggable="true">
+                <div class="task-checkbox">
+                    <input 
+                        type="checkbox" 
+                        class="task-check" 
+                        data-task-id="{{ task.id }}"
+                        {{ 'checked' if task.completed else '' }}
+                    >
+                </div>
+                <div class="task-content">
+                    <div class="task-main">
+                        <div class="task-title-wrapper">
+                            <input 
+                                type="text" 
+                                class="task-title" 
+                                value="{{ task.title }}"
+                                data-task-id="{{ task.id }}"
+                                readonly
+                            >
+                        </div>
+                        {% if task.due_date %}
+                        <div class="task-due-date">
+                            <span class="due-date-badge {{ 'overdue' if task.due_date < today and not task.completed else '' }}">
+                                {{ task.due_date.strftime('%b %d') }}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if task.description %}
+                    <div class="task-description">{{ task.description }}</div>
+                    {% endif %}
+                    {% if task.tags %}
+                    <div class="task-tags">
+                        {% for tag in task.tags %}
+                        {% set bg_color = tag.color + "20" %}
+                        <span class="task-tag" style="background-color: {{ bg_color }}; color: {{ tag.color }};">
+                            {{ tag.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="task-actions">
+                    <button class="task-edit" data-task-id="{{ task.id }}" title="Edit">✎</button>
+                    <button class="task-delete" data-task-id="{{ task.id }}" title="Delete">×</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p class="empty-message">No tasks found. Add one above to get started!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal" id="edit-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit Task</h2>
+            <button class="modal-close" id="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="edit-task-form">
+                <input type="hidden" id="edit-task-id">
+                <div class="form-group">
+                    <label for="edit-task-title">Title</label>
+                    <input type="text" id="edit-task-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-task-description">Description</label>
+                    <textarea id="edit-task-description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-task-due-date">Due Date</label>
+                    <input type="date" id="edit-task-due-date">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-button" id="cancel-edit">Cancel</button>
+                    <button type="submit" class="save-button">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="delete-modal" style="display: none;">
+    <div class="modal-content delete-modal-content">
+        <div class="delete-modal-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+        </div>
+        <div class="modal-body delete-modal-body">
+            <h2 class="delete-modal-title">Delete Task</h2>
+            <p class="delete-modal-message">Are you sure you want to delete this task? This action cannot be undone.</p>
+            <div class="form-actions delete-modal-actions">
+                <button type="button" class="cancel-button" id="delete-cancel">Cancel</button>
+                <button type="button" class="delete-confirm-button" id="delete-confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

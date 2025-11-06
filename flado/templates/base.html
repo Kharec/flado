@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <title>{% block title %}Flado{% endblock %}</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body data-theme="{{ config.get('FLADO_THEME', 'auto') }}">
+    <div class="app-container">
+      <header class="app-header">
+        <h1 class="app-title">Flado</h1>
+        <p class="app-subtitle">Simple task management</p>
+      </header>
+
+      <main class="app-main">{% block content %}{% endblock %}</main>
+
+      <footer class="app-footer">
+        <p>
+          &copy; 2025 Flado by
+          <a href="https://sandro.cazzaniga.fr" target="_blank"
+            >Sandro CAZZANIGA</a
+          >
+        </p>
+        <p>Built with Python, Flask and ❤️</p>
+      </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>
