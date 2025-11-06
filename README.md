@@ -4,8 +4,6 @@ Flado is the usual todo list app project everyone does once (or more) in their l
 
 I hacked it overnight, mainly to refresh my (very poor) frontend skills.
 
-<img width="849" height="744" alt="flado-screen" src="https://github.com/user-attachments/assets/021125e3-d0db-4263-a9e9-3c943ea4dd47" />
-
 ## Highlights
 
 - Minimal, responsive UI on desktop and mobile.
