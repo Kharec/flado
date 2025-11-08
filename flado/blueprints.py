@@ -52,7 +52,7 @@ def index() -> str:
     search_query = request.args.get('search', '')
 
     # Validate filter type
-    valid_filters = ['all', 'today', 'upcoming', 'active', 'completed']
+    valid_filters = ['all', 'today', 'upcoming', 'overdue', 'active', 'completed']
     if filter_type not in valid_filters:
         filter_type = 'all'
 
