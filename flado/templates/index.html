@@ -21,6 +21,8 @@
                class="filter-tab {{ 'active' if filter_type == 'today' else '' }}">Today</a>
             <a href="{{ url_for('tasks.index', filter='upcoming') }}" 
                class="filter-tab {{ 'active' if filter_type == 'upcoming' else '' }}">Upcoming</a>
+            <a href="{{ url_for('tasks.index', filter='overdue') }}" 
+               class="filter-tab {{ 'active' if filter_type == 'overdue' else '' }}">Overdue</a>
             <a href="{{ url_for('tasks.index', filter='active') }}" 
                class="filter-tab {{ 'active' if filter_type == 'active' else '' }}">Active</a>
             <a href="{{ url_for('tasks.index', filter='completed') }}" 
