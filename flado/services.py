@@ -28,6 +28,8 @@ def get_tasks(filter_type: str = 'all', search_query: Optional[str] = None) -> Q
         query = query.filter(Task.due_date == date.today())
     elif filter_type == 'upcoming':
         query = query.filter(Task.due_date > date.today())
+    elif filter_type == 'overdue':
+        query = query.filter(Task.due_date < date.today(), Task.completed.is_(False))
     elif filter_type == 'completed':
         query = query.filter(Task.completed.is_(True))
     elif filter_type == 'active':
