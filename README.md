@@ -127,14 +127,9 @@ This will start the application with 2 workers and a timeout of 120 seconds.
 
 ## Contributing
 
-Pull requests and feedback are welcome! Open an issue to discuss new ideas or fixes.
+Feedbacks are welcome!
 
-When submitting changes, please follow these steps:
-
-1. Fork and clone the repository.
-2. Create a feature branch (`git checkout -b feature/amazing-idea`).
-3. Add tests if you want to (optional).
-4. Submit a pull request describing your changes.
+But as it's a personal gitea and you cannot create account, feel free to contact me at <sandro@cazzaniga.fr>.
 
 ## License
 
