@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 # 3. Set environment variables for Flask
 export FLASK_APP=flado.app:create_app
-export FLASK_DEBUG=1
+export FLASK_ENV=development
 
 # 4. Initialize the SQLite database (instance/flado.sqlite by default)
 flask db init
@@ -42,7 +42,7 @@ The SQLite database file is stored in the `instance/` directory (it remains outs
 
 Environment variables can tweak runtime behavior:
 
-- `FLASK_DEBUG`: Set to `1`, `true`, `yes` to enable debug mode (development mode). When not set or set to any other value, production mode is enabled.
+- `FLASK_ENV`: Set to `development` or `production`.
 - `FLADO_DATABASE_URI`: Override the default SQLite path (`sqlite:///instance/flado.sqlite`).
 - `FLADO_SECRET_KEY`: Provide a secret key for session cookies.
 - `FLADO_THEME`: Switch between built-in themes such as `light`, `dark`, or `auto`.
