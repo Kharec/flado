@@ -77,7 +77,7 @@ def create_app(config_name: Optional[str] = None) -> Flask:
 
     # Initialize extensions
     db.init_app(app)
-    migrate = Migrate(app, db)
+    Migrate(app, db)
     csrf = CSRFProtect(app)
 
     # Exempt health check endpoint from CSRF (used by monitoring)
