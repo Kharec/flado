@@ -45,13 +45,15 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     app = Flask(__name__, template_folder=template_dir,
                 static_folder=static_dir)
 
-    # Configuration
+    # Secret key handling
     secret_key = os.getenv('FLADO_SECRET_KEY')
-    if _is_production and not secret_key:
-        raise ValueError(
-            "FLADO_SECRET_KEY environment variable must be set in production"
-        )
-    app.config['SECRET_KEY'] = secret_key or 'dev-secret-key-change-in-production'
+    if not secret_key:
+        if _is_production:
+            raise ValueError(
+                "FLADO_SECRET_KEY environment variable must be set in production")
+        app.logger.warning("Using default secret key - change in production")
+        secret_key = 'dev-secret-key-change-in-production'
+    app.config['SECRET_KEY'] = secret_key
 
     # Database configuration
     database_uri = os.getenv('FLADO_DATABASE_URI')
