@@ -1,6 +1,6 @@
 """SQLAlchemy models for Flado."""
 from datetime import datetime, timezone
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from flask_sqlalchemy import SQLAlchemy
 
