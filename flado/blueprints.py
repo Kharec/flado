@@ -1,6 +1,6 @@
 """Blueprint for task-related routes."""
 import logging
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import Dict, Any, Tuple
 
 from flask import Blueprint, render_template, request, jsonify, Response
@@ -34,13 +34,15 @@ def health_check() -> Response:
         db.session.scalar(text('SELECT 1'))
         return jsonify({
             'status': 'healthy',
-            'database': 'connected'
+            'database': 'connected',
+            'timestamp': datetime.now(timezone.utc).isoformat()
         }), 200
     except Exception as e:
         logger.error(f'Health check failed: {e}')
         return jsonify({
             'status': 'unhealthy',
             'database': 'disconnected',
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'error': str(e)
         }), 503
 
