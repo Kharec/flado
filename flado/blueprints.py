@@ -31,7 +31,7 @@ def health_check() -> Response:
     """
     try:
         # Test database connection
-        db.session.execute(text('SELECT 1'))
+        db.session.scalar(text('SELECT 1'))
         return jsonify({
             'status': 'healthy',
             'database': 'connected'
@@ -52,7 +52,8 @@ def index() -> str:
     search_query = request.args.get('search', '')
 
     # Validate filter type
-    valid_filters = ['all', 'today', 'upcoming', 'overdue', 'active', 'completed']
+    valid_filters = ['all', 'today', 'upcoming',
+                     'overdue', 'active', 'completed']
     if filter_type not in valid_filters:
         filter_type = 'all'
 
