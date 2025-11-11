@@ -5,6 +5,7 @@ from typing import Dict, Any, Tuple
 
 from flask import Blueprint, render_template, request, jsonify, Response
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from .models import Task, db
 from .services import (
@@ -37,13 +38,19 @@ def health_check() -> Response:
             'database': 'connected',
             'timestamp': datetime.now(timezone.utc).isoformat()
         }), 200
+    except SQLAlchemyError as e:
+        logger.error(f'Health check database error: {e}')
+        return jsonify({
+            'status': 'unhealthy',
+            'database': 'disconnected',
+            'timestamp': datetime.now(timezone.utc).isoformat()
+        }), 503
     except Exception as e:
         logger.error(f'Health check failed: {e}')
         return jsonify({
             'status': 'unhealthy',
-            'database': 'disconnected',
-            'timestamp': datetime.now(timezone.utc).isoformat(),
-            'error': str(e)
+            'database': 'unknown',
+            'timestamp': datetime.now(timezone.utc).isoformat()
         }), 503
 
 
