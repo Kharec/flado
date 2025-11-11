@@ -1,6 +1,7 @@
 """Flask application factory."""
 import logging
 import os
+from pathlib import Path
 from typing import Optional, Tuple
 
 from flask import Flask, jsonify, Response
@@ -8,7 +9,7 @@ from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from dotenv import load_dotenv
 
-from .blueprints import tasks_blueprint
+from .blueprints import tasks_blueprint, health_check
 from .errors import register_error_handlers
 from .models import db
 
@@ -39,10 +40,9 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     load_dotenv()
 
     # Get the base directory (project root)
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    template_dir = os.path.join(base_dir, 'flado', 'templates')
-    static_dir = os.path.join(base_dir, 'static')
-
+    base_dir = Path(__file__).parent.parent.resolve()
+    template_dir = base_dir / 'flado' / 'templates'
+    static_dir = base_dir / 'static'
     app = Flask(__name__, template_folder=template_dir,
                 static_folder=static_dir)
 
@@ -59,9 +59,9 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     # Database configuration
     database_uri = os.getenv('FLADO_DATABASE_URI')
     if not database_uri:
-        instance_dir = os.path.join(base_dir, 'instance')
-        os.makedirs(instance_dir, exist_ok=True)
-        database_path = os.path.join(instance_dir, 'flado.sqlite')
+        instance_dir = base_dir / 'instance'
+        instance_dir.mkdir(exist_ok=True)
+        database_path = instance_dir / 'flado.sqlite'
         database_uri = f'sqlite:///{database_path}'
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -88,12 +88,12 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     csrf = CSRFProtect(app)
 
     # Exempt health check endpoint from CSRF (used by monitoring)
-    csrf.exempt(tasks_blueprint.view_functions['health_check'])
-
-    # Register error handlers
-    register_error_handlers(app)
+    csrf.exempt(health_check)
 
     # Register blueprints
     app.register_blueprint(tasks_blueprint)
+
+    # Register error handlers
+    register_error_handlers(app)
 
     return app
