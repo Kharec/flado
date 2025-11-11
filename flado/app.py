@@ -88,7 +88,7 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     csrf = CSRFProtect(app)
 
     # Exempt health check endpoint from CSRF (used by monitoring)
-    csrf.exempt('tasks.health_check')
+    csrf.exempt(tasks_blueprint.view_functions['health_check'])
 
     # Register error handlers
     register_error_handlers(app)
