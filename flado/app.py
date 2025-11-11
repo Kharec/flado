@@ -63,6 +63,10 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Validate database URI format
+    if not database_uri.startswith(('sqlite:///')):
+        raise ValueError(f"Invalid database URI format: {database_uri}")
+
     # Theme configuration
     app.config['FLADO_THEME'] = os.getenv('FLADO_THEME', 'auto')
 
