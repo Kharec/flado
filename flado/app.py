@@ -11,9 +11,6 @@ from dotenv import load_dotenv
 from .blueprints import tasks_blueprint
 from .models import db
 
-# Load environment variables
-load_dotenv()
-
 # Determine if we're in production
 FLASK_ENV = os.getenv('FLASK_ENV', 'development').lower()
 _is_production = FLASK_ENV == 'production'
@@ -37,6 +34,9 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     Returns:
         Flask application instance
     """
+    # Load environment variables
+    load_dotenv()
+
     # Get the base directory (project root)
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     template_dir = os.path.join(base_dir, 'flado', 'templates')
