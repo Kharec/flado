@@ -2,14 +2,14 @@
 import logging
 import os
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 
-from flask import Flask, jsonify, Response
-from flask_migrate import Migrate
-from flask_wtf.csrf import CSRFProtect, CSRFError
 from dotenv import load_dotenv
+from flask import Flask
+from flask_migrate import Migrate
+from flask_wtf.csrf import CSRFProtect
 
-from .blueprints import tasks_blueprint, health_check
+from .blueprints import health_check, tasks_blueprint
 from .errors import register_error_handlers
 from .models import db
 
