@@ -15,8 +15,8 @@ from .models import db
 load_dotenv()
 
 # Determine if we're in production
-_is_production = os.getenv(
-    'FLASK_DEBUG', '').lower() not in ('1', 'true', 'yes')
+FLASK_ENV = os.getenv('FLASK_ENV', 'development').lower()
+_is_production = FLASK_ENV == 'production'
 
 
 def setup_logging(app: Flask) -> None:
