@@ -9,6 +9,7 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 from dotenv import load_dotenv
 
 from .blueprints import tasks_blueprint
+from .errors import register_error_handlers
 from .models import db
 
 # Determine if we're in production
@@ -90,27 +91,7 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     csrf.exempt('tasks.health_check')
 
     # Register error handlers
-    @app.errorhandler(400)
-    def bad_request(error) -> Tuple[Response, int]:
-        """Handle 400 errors with JSON response."""
-        return jsonify({'error': 'Bad request', 'message': str(error)}), 400
-
-    @app.errorhandler(404)
-    def not_found(error) -> Tuple[Response, int]:
-        """Handle 404 errors with JSON response."""
-        return jsonify({'error': 'Not found', 'message': str(error)}), 404
-
-    @app.errorhandler(CSRFError)
-    def handle_csrf_error(e) -> Tuple[Response, int]:
-        """Handle CSRF errors with JSON response."""
-        app.logger.warning(f'CSRF error: {e}')
-        return jsonify({'error': 'CSRF token missing or invalid'}), 400
-
-    @app.errorhandler(500)
-    def internal_error(error) -> Tuple[Response, int]:
-        """Handle 500 errors with JSON response."""
-        app.logger.error(f'Server error: {error}')
-        return jsonify({'error': 'Internal server error'}), 500
+    register_error_handlers(app)
 
     # Register blueprints
     app.register_blueprint(tasks_blueprint)
