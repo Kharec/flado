@@ -73,7 +73,8 @@ flado/
 ├── Dockerfile                # Docker build file
 ├── .env.example              # Example environment config for Docker/production
 ├── README.md                 # This file
-├── requirements.txt          # Python dependencies
+├── pyproject.toml            # Python project configuration
+├── uv.lock                   # UV lock file
 └── wsgi.py                   # WSGI entry point for production deployment (optional)
 ```
 
@@ -120,23 +121,6 @@ gunicorn --bind 0.0.0.0:5000 --workers 2 --timeout 120 --access-logfile - --erro
 ```
 
 This will start the application with 2 workers and a timeout of 120 seconds.
-
-## Contributing
-
-Feedbacks are welcome!
-
-But as it's a personal gitea and you cannot create accounts, feel free to contact me at <sandro@cazzaniga.fr> to get one.
-
-Once you have it, follow the usual workflow:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
-
-Then, I'll review your changes and merge them if they are good.
 
 ## License
 
