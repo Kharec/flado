@@ -16,25 +16,23 @@ I hacked it overnight, mainly to refresh my (very poor) frontend skills.
 ## Quick Start (for development)
 
 ```bash
-# 1. Create and activate a virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+# 1. Install and use uv (https://github.com/astral-sh/uv)
+uv sync  # creates/updates .venv and installs dependencies
 
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Set environment variables for Flask
+# 2. Set environment variables for Flask
 export FLASK_APP=flado.app:create_app
 export FLASK_ENV=development
 
-# 4. Initialize the SQLite database (instance/flado.sqlite by default)
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
+# 3. Initialize the SQLite database (instance/flado.sqlite by default)
+uv run flask db init
+uv run flask db migrate -m "Initial migration"
+uv run flask db upgrade
 
-# 5. Run the development server
-flask run --debug
+# 4. Run the development server
+uv run flask run --debug
 ```
+
+`uv` pins dependencies in `uv.lock` (exported to `requirements.txt` for compatibility). If you prefer `pip`, you can still do `python -m venv .venv && source .venv/bin/activate` followed by `pip install -r requirements.txt`.
 
 The SQLite database file is stored in the `instance/` directory (it remains outside of version control by default).
 
