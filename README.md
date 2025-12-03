@@ -32,8 +32,6 @@ uv run flask db upgrade
 uv run flask run --debug
 ```
 
-`uv` pins dependencies in `uv.lock` (exported to `requirements.txt` for compatibility). If you prefer `pip`, you can still do `python -m venv .venv && source .venv/bin/activate` followed by `pip install -r requirements.txt`.
-
 The SQLite database file is stored in the `instance/` directory (it remains outside of version control by default).
 
 ## Configuration
