@@ -1,9 +1,8 @@
 """Input validation utilities for Flado."""
 import re
-from typing import Optional, List, Tuple
 
 
-def validate_title(title: Optional[str]) -> Tuple[bool, Optional[str]]:
+def validate_title(title: str | None) -> tuple[bool, str | None]:
     """
     Validate task title.
 
@@ -11,7 +10,7 @@ def validate_title(title: Optional[str]) -> Tuple[bool, Optional[str]]:
         title: Title to validate
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if not title:
         return False, "Title is required"
@@ -26,7 +25,7 @@ def validate_title(title: Optional[str]) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def validate_description(description: Optional[str]) -> Tuple[bool, Optional[str]]:
+def validate_description(description: str | None) -> tuple[bool, str | None]:
     """
     Validate task description.
 
@@ -34,7 +33,7 @@ def validate_description(description: Optional[str]) -> Tuple[bool, Optional[str
         description: Description to validate
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if description is None:
         return True, None
@@ -46,7 +45,7 @@ def validate_description(description: Optional[str]) -> Tuple[bool, Optional[str
     return True, None
 
 
-def validate_date_format(date_str: Optional[str]) -> Tuple[bool, Optional[str]]:
+def validate_date_format(date_str: str | None) -> tuple[bool, str | None]:
     """
     Validate date string format (YYYY-MM-DD).
 
@@ -54,7 +53,7 @@ def validate_date_format(date_str: Optional[str]) -> Tuple[bool, Optional[str]]:
         date_str: Date string to validate
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if not date_str:
         return True, None
@@ -70,7 +69,7 @@ def validate_date_format(date_str: Optional[str]) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def validate_tag_name(tag_name: Optional[str]) -> Tuple[bool, Optional[str]]:
+def validate_tag_name(tag_name: str | None) -> tuple[bool, str | None]:
     """
     Validate tag name.
 
@@ -78,7 +77,7 @@ def validate_tag_name(tag_name: Optional[str]) -> Tuple[bool, Optional[str]]:
         tag_name: Tag name to validate
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if not tag_name:
         return False, "Tag name is required"
@@ -97,15 +96,15 @@ def validate_tag_name(tag_name: Optional[str]) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def validate_tag_names(tag_names: Optional[List[str]]) -> Tuple[bool, Optional[str]]:
+def validate_tag_names(tag_names: list[str] | None) -> tuple[bool, str | None]:
     """
     Validate list of tag names.
 
     Args:
-        tag_names: List of tag names to validate
+        tag_names: list[str] of tag names to validate
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if tag_names is None:
         return True, None
@@ -121,7 +120,7 @@ def validate_tag_names(tag_names: Optional[List[str]]) -> Tuple[bool, Optional[s
     return True, None
 
 
-def validate_hex_color(color: Optional[str]) -> Tuple[bool, Optional[str]]:
+def validate_hex_color(color: str | None) -> tuple[bool, str | None]:
     """
     Validate hex color format.
 
@@ -129,7 +128,7 @@ def validate_hex_color(color: Optional[str]) -> Tuple[bool, Optional[str]]:
         color: Hex color string (e.g., #RRGGBB)
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if not color:
         return True, None
@@ -144,15 +143,15 @@ def validate_hex_color(color: Optional[str]) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def validate_task_ids(task_ids: Optional[List[int]]) -> Tuple[bool, Optional[str]]:
+def validate_task_ids(task_ids: list[int] | None) -> tuple[bool, str | None]:
     """
     Validate list of task IDs.
 
     Args:
-        task_ids: List of task IDs to validate
+        task_ids: list[int] of task IDs to validate
 
     Returns:
-        Tuple of (is_valid, error_message)
+        tuple[bool, str | None]: (is_valid, error_message)
     """
     if not task_ids:
         return False, "task_ids is required"

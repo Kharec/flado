@@ -1,7 +1,6 @@
 """Business logic helpers for Flado."""
 import logging
 from datetime import datetime, date, timezone
-from typing import Optional, List
 
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Query
@@ -11,13 +10,13 @@ from .models import db, Task, Tag
 logger = logging.getLogger(__name__)
 
 
-def get_tasks(filter_type: str = 'all', search_query: Optional[str] = None) -> Query:
+def get_tasks(filter_type: str = 'all', search_query: str | None = None) -> Query:
     """
     Retrieve tasks based on filter type.
 
     Args:
         filter_type: 'all', 'today', 'upcoming', 'completed', 'active'
-        search_query: Optional search string to filter by title/description
+        search_query: str | None search string to filter by title/description
 
     Returns:
         Query object of tasks
@@ -49,18 +48,18 @@ def get_tasks(filter_type: str = 'all', search_query: Optional[str] = None) -> Q
 
 def create_task(
     title: str,
-    description: Optional[str] = None,
-    due_date: Optional[date] = None,
-    tag_names: Optional[List[str]] = None
+    description: str | None = None,
+    due_date: date | None = None,
+    tag_names: list[str] | None = None
 ) -> Task:
     """
     Create a new task.
 
     Args:
         title: Task title (required, already validated)
-        description: Optional task description (already validated)
-        due_date: Optional due date (date object, already validated)
-        tag_names: Optional list of tag names to associate (already validated)
+        description: str | None task description (already validated)
+        due_date: date | None due date (date object, already validated)
+        tag_names: list[str] | None list of tag names to associate (already validated)
 
     Returns:
         Created Task object
@@ -162,12 +161,12 @@ def delete_task(task_id: int) -> bool:
         raise
 
 
-def reorder_tasks(task_ids: List[int]) -> bool:
+def reorder_tasks(task_ids: list[int]) -> bool:
     """
     Reorder tasks by updating their positions.
 
     Args:
-        task_ids: List of task IDs in desired order (already validated)
+        task_ids: list[int] of task IDs in desired order (already validated)
 
     Returns:
         True if reordered successfully
@@ -209,15 +208,15 @@ def reorder_tasks(task_ids: List[int]) -> bool:
         raise
 
 
-def get_or_create_tags(tag_names: List[str]) -> List[Tag]:
+def get_or_create_tags(tag_names: list[str]) -> list[Tag]:
     """
     Get existing tags or create new ones.
 
     Args:
-        tag_names: List of tag names (already validated)
+        tag_names: list[str] of tag names (already validated)
 
     Returns:
-        List of Tag objects
+        list[Tag] of tag objects
 
     Note:
         Does not commit the session. Caller is responsible for committing.
@@ -235,6 +234,6 @@ def get_or_create_tags(tag_names: List[str]) -> List[Tag]:
     return tags
 
 
-def get_all_tags() -> List[Tag]:
+def get_all_tags() -> list[Tag]:
     """Get all tags."""
     return Tag.query.order_by(Tag.name.asc()).all()

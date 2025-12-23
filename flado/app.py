@@ -2,7 +2,6 @@
 import logging
 import os
 from pathlib import Path
-from typing import Optional
 
 from dotenv import load_dotenv
 from flask import Flask
@@ -26,12 +25,12 @@ def setup_logging(app: Flask) -> None:
         app.logger.setLevel(logging.DEBUG)
 
 
-def create_app(config_name: Optional[str] = None) -> Flask:
+def create_app(config_name: str | None = None) -> Flask:
     """
     Application factory pattern for Flask.
 
     Args:
-        config_name: Optional configuration name (development, production, etc.)
+        config_name: str | None configuration name (development, production, etc.)
 
     Returns:
         Flask application instance

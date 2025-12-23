@@ -1,7 +1,7 @@
 """Blueprint for task-related routes."""
 import logging
 from datetime import datetime, date, timezone
-from typing import Dict, Any, Tuple
+from typing import Any
 
 from flask import Blueprint, render_template, request, jsonify, Response
 from sqlalchemy import text
@@ -93,7 +93,7 @@ def index() -> str:
 
 
 @tasks_blueprint.route('/api/tasks', methods=['POST'])
-def api_create_task() -> Tuple[Response, int]:
+def api_create_task() -> tuple[Response, int]:
     """API endpoint to create a new task."""
     try:
         data = request.get_json()
@@ -142,7 +142,7 @@ def api_create_task() -> Tuple[Response, int]:
 
 
 @tasks_blueprint.route('/api/tasks/<int:task_id>', methods=['GET'])
-def api_get_task(task_id: int) -> Tuple[Response, int]:
+def api_get_task(task_id: int) -> tuple[Response, int]:
     """API endpoint to get a single task."""
     try:
         task = Task.query.get_or_404(task_id)
@@ -153,14 +153,14 @@ def api_get_task(task_id: int) -> Tuple[Response, int]:
 
 
 @tasks_blueprint.route('/api/tasks/<int:task_id>', methods=['PUT', 'PATCH'])
-def api_update_task(task_id: int) -> Tuple[Response, int]:
+def api_update_task(task_id: int) -> tuple[Response, int]:
     """API endpoint to update a task."""
     try:
         data = request.get_json()
         if not isinstance(data, dict):
             return jsonify({'error': 'Invalid JSON payload'}), 400
 
-        update_data: Dict[str, Any] = {}
+        update_data: dict[str, Any] = {}
 
         # Validate and update title
         if 'title' in data:
@@ -217,7 +217,7 @@ def api_update_task(task_id: int) -> Tuple[Response, int]:
 
 
 @tasks_blueprint.route('/api/tasks/<int:task_id>', methods=['DELETE'])
-def api_delete_task(task_id: int) -> Tuple[Response, int]:
+def api_delete_task(task_id: int) -> tuple[Response, int]:
     """API endpoint to delete a task."""
     try:
         delete_task(task_id)
@@ -229,7 +229,7 @@ def api_delete_task(task_id: int) -> Tuple[Response, int]:
 
 
 @tasks_blueprint.route('/api/tasks/reorder', methods=['POST'])
-def api_reorder_tasks() -> Tuple[Response, int]:
+def api_reorder_tasks() -> tuple[Response, int]:
     """API endpoint to reorder tasks."""
     try:
         data = request.get_json()

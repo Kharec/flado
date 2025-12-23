@@ -1,6 +1,6 @@
 """SQLAlchemy models for Flado."""
 from datetime import datetime, timezone
-from typing import Dict, Any
+from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -29,7 +29,7 @@ class Task(db.Model):
     tags = db.relationship('Tag', secondary='task_tags',
                            back_populates='tasks', lazy='select')
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert task to dictionary for JSON serialization."""
         return {
             'id': self.id,
