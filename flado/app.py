@@ -12,10 +12,6 @@ from .blueprints import health_check, tasks_blueprint
 from .errors import register_error_handlers
 from .models import db
 
-# Determine if we're in production
-FLASK_ENV = os.getenv('FLASK_ENV', 'development').lower()
-_is_production = FLASK_ENV == 'production'
-
 
 def setup_logging(app: Flask) -> None:
     """Configure logging for the application."""
@@ -45,12 +41,17 @@ def create_app(config_name: str | None = None) -> Flask:
     app = Flask(__name__, template_folder=template_dir,
                 static_folder=static_dir)
 
+    debug_env = os.getenv('FLASK_DEBUG', '').lower() in ('1', 'true', 'yes')
+    if debug_env:
+        app.config['DEBUG'] = True
+    is_secure_context = not (app.debug or app.testing)
+
     # Secret key handling
     secret_key = os.getenv('FLADO_SECRET_KEY')
     if not secret_key:
-        if _is_production:
+        if is_secure_context:
             raise ValueError(
-                "FLADO_SECRET_KEY environment variable must be set in production")
+                "FLADO_SECRET_KEY environment variable must be set when debug is disabled")
         app.logger.warning("Using default secret key - change in production")
         secret_key = 'dev-secret-key-change-in-production'
     app.config['SECRET_KEY'] = secret_key
@@ -75,7 +76,7 @@ def create_app(config_name: str | None = None) -> Flask:
     # Session configuration for CSRF protection
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     app.config['SESSION_COOKIE_HTTPONLY'] = True
-    if _is_production:
+    if is_secure_context:
         app.config['SESSION_COOKIE_SECURE'] = True
 
     # Setup logging
